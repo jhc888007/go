@@ -18,14 +18,14 @@ type Message struct {
 type CenterServer struct {
 	servers map[string]ipc.Server
 	players []*Player
-	rooms   []*Room
 	mutex   sync.RWMutex
 }
 
 func NewCenterServer() *CenterServer {
 	servers := make(map[string]ipc.Server)
 	players := make([]*Player, 0)
-	return &CenterServer{servers, players}
+	mutex := new(sync.RWMutex)
+	return &CenterServer{servers, players, *mutex}
 }
 
 func (server *CenterServer) addPlayer(params string) error {
@@ -113,7 +113,7 @@ func (server *CenterServer) Handle(method, params string) *ipc.Response {
 			return &ipc.Response{Code: err.Error()}
 		}
 	case "listplayer":
-		err := server.listPlayer(params)
+		players, err := server.listPlayer(params)
 		if err != nil {
 			return &ipc.Response{Code: err.Error()}
 		}
@@ -127,7 +127,7 @@ func (server *CenterServer) Handle(method, params string) *ipc.Response {
 	default:
 		return &ipc.Response{Code: "404", Body: method + ":" + params}
 	}
-	return &ipc.Respons{Code: "200"}
+	return &ipc.Response{Code: "200"}
 }
 
 func (server *CenterServer) Name() string {
