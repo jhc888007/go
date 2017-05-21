@@ -16,7 +16,7 @@ func (server *EchoServer) Name() string {
 }
 
 func TestIpc(t *testing.T) {
-	server := &IpcServer{nil} //NewIpcServer(&EchoServer{})
+	server := NewIpcServer(&EchoServer{})
 
 	client1 := NewIpcClient(server)
 	client2 := NewIpcClient(server)

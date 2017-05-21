@@ -16,16 +16,14 @@ type Message struct {
 }
 
 type CenterServer struct {
-	servers map[string]ipc.Server
 	players []*Player
 	mutex   sync.RWMutex
 }
 
 func NewCenterServer() *CenterServer {
-	servers := make(map[string]ipc.Server)
 	players := make([]*Player, 0)
 	mutex := new(sync.RWMutex)
-	return &CenterServer{servers, players, *mutex}
+	return &CenterServer{players, *mutex}
 }
 
 func (server *CenterServer) addPlayer(params string) error {
